@@ -1,3 +1,4 @@
+import {ALLOWED_URL_SCHEMES} from "@/utils/safe-href";
 import {defineArrayMember, defineField} from "sanity";
 
 import {imageBlock} from "./image";
@@ -20,7 +21,27 @@ export const ptBody = defineField({
         {title: "Bullet list", value: "bullet"},
         {title: "Numbered list", value: "number"},
       ],
-      marks: {},
+      marks: {
+        annotations: [
+          {
+            fields: [
+              {
+                name: "href",
+                title: "URL",
+                type: "url",
+                validation: (Rule) =>
+                  Rule.uri({
+                    allowRelative: true,
+                    scheme: ALLOWED_URL_SCHEMES,
+                  }),
+              },
+            ],
+            name: "link",
+            title: "Link",
+            type: "object",
+          },
+        ],
+      },
       styles: availableStyles.length
         ? [
             {title: "Paragraph", value: "normal"},
