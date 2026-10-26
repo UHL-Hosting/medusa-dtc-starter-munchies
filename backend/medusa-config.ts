@@ -2,11 +2,13 @@ import { defineConfig, loadEnv, Modules } from "@medusajs/framework/utils";
 
 loadEnv(process.env.NODE_ENV, process.cwd());
 
+const MIN_SECRET_LENGTH = 32;
+
 function requireSecret(name: string): string {
   const value = process.env[name]?.trim();
-  if (!value || value === "supersecret") {
+  if (!value || value.length < MIN_SECRET_LENGTH) {
     throw new Error(
-      `${name} must be set to a strong random value (e.g. \`openssl rand -base64 32\`).`
+      `${name} must be a random value of at least ${MIN_SECRET_LENGTH} characters (e.g. \`openssl rand -base64 32\`).`
     );
   }
   return value;
