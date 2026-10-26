@@ -2,6 +2,16 @@ import { defineConfig, loadEnv, Modules } from "@medusajs/framework/utils";
 
 loadEnv(process.env.NODE_ENV, process.cwd());
 
+function requireSecret(name: string): string {
+  const value = process.env[name]?.trim();
+  if (!value || value === "supersecret") {
+    throw new Error(
+      `${name} must be set to a strong random value (e.g. \`openssl rand -base64 32\`).`
+    );
+  }
+  return value;
+}
+
 export default defineConfig({
   projectConfig: {
     redisUrl: process.env.REDIS_URL,
@@ -11,8 +21,8 @@ export default defineConfig({
       storeCors: process.env.STORE_CORS,
       adminCors: process.env.ADMIN_CORS,
       authCors: process.env.AUTH_CORS,
-      jwtSecret: process.env.JWT_SECRET || "supersecret",
-      cookieSecret: process.env.COOKIE_SECRET || "supersecret",
+      jwtSecret: requireSecret("JWT_SECRET"),
+      cookieSecret: requireSecret("COOKIE_SECRET"),
     },
   },
   admin: {
