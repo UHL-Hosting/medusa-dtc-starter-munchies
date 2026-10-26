@@ -2,11 +2,8 @@
 import type { ComponentProps } from "react";
 
 import config from "@/config";
-import {
-  ALLOWED_URL_SCHEMES,
-  getSafeHref,
-  isAbsoluteUrl,
-} from "@/utils/safe-href";
+import { getSafeHref, isAbsoluteUrl } from "@/utils/safe-href";
+import { formatUrl } from "next/dist/shared/lib/router/utils/format-url";
 import Link from "next/link";
 
 import { useCountryCode } from "../context/country-code-context";
@@ -19,16 +16,9 @@ export default function LocalizedLink({
 
   const isDefault = countryCode === config.defaultCountryCode
 
-  const safeHref =
-    typeof href === "string"
-      ? getSafeHref(href)
-      : href &&
-          (!href.protocol ||
-            ALLOWED_URL_SCHEMES.includes(
-              href.protocol.replace(/:$/, "").toLowerCase(),
-            ))
-        ? href
-        : undefined;
+  const safeHref = getSafeHref(
+    typeof href === "string" ? href : formatUrl(href),
+  );
 
   if (!safeHref) {
     return (
