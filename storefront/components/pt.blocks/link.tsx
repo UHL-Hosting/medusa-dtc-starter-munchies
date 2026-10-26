@@ -1,5 +1,7 @@
 import type {PortableTextMarkComponentProps} from "@portabletext/react";
 
+import {getSafeHref} from "@/utils/safe-href";
+
 import LocalizedLink from "../shared/localized-link";
 
 type linkData = {
@@ -8,9 +10,10 @@ type linkData = {
   href: string;
 };
 export function PtLink(props: PortableTextMarkComponentProps<linkData>) {
-  if (!props.value) return <>{props.children}</>;
+  const href = getSafeHref(props.value?.href);
+  if (!href) return <>{props.children}</>;
   return (
-    <LocalizedLink className="break-words underline" href={props.value.href}>
+    <LocalizedLink className="break-words underline" href={href}>
       {props.children}
     </LocalizedLink>
   );
